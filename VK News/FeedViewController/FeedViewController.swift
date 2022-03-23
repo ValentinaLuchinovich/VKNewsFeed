@@ -1,26 +1,20 @@
 //
-//  AuthViewController.swift
+//  FeedViewController.swift
 //  VK News
 //
-//  Created by Валентина Лучинович on 22.03.2022.
+//  Created by Валентина Лучинович on 23.03.2022.
 //
 
 import UIKit
 
-class AuthViewController: UIViewController {
+class FeedViewController: UIViewController {
 
-    private var authServise: AuthService!
-    
     override func viewDidLoad() {
         super.viewDidLoad()
 
-//      authServise = AuthService()
-        authServise = SceneDelegate.shared().authService
+        view.backgroundColor = #colorLiteral(red: 0.3730105758, green: 0.6846097112, blue: 1, alpha: 1)
     }
     
-    @IBAction func signInTouch() {
-        authServise.wakeUpSession()
-    }
 
     /*
     // MARK: - Navigation

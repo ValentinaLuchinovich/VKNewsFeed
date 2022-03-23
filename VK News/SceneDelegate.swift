@@ -6,19 +6,34 @@
 //
 
 import UIKit
+import VKSdkFramework
 
-class SceneDelegate: UIResponder, UIWindowSceneDelegate {
+class SceneDelegate: UIResponder, UIWindowSceneDelegate, AuthServiceDelegate {
 
     var window: UIWindow?
-
+    var authService: AuthService!
+    
+    static func shared() -> SceneDelegate {
+        let scene = UIApplication.shared.connectedScenes.first
+        let sceneDelegate: SceneDelegate = (scene?.delegate as? SceneDelegate)!
+        return sceneDelegate
+    }
 
     func scene(_ scene: UIScene, willConnectTo session: UISceneSession, options connectionOptions: UIScene.ConnectionOptions) {
-//        guard let _ = (scene as? UIWindowScene) else { return }
-        if let windowScene = scene as? UIWindowScene {
-            let window = UIWindow(windowScene: windowScene)
-            let authVC = UIStoryboard(name: "AuthViewController", bundle: nil).instantiateInitialViewController() as? AuthViewController
-            window.rootViewController = authVC
-            window.makeKeyAndVisible()
+        
+        guard let windowScene = (scene as? UIWindowScene) else { return }
+        window = UIWindow(frame: windowScene.coordinateSpace.bounds)
+        window?.windowScene = windowScene
+        self.authService = AuthService()
+        authService.delegate = self
+        let authVC: AuthViewController = AuthViewController.loadFromStoryboard()
+        window?.rootViewController = authVC
+        window?.makeKeyAndVisible()
+    }
+    
+    func scene(_ scene: UIScene, openURLContexts URLContexts: Set<UIOpenURLContext>) {
+        if let url = URLContexts.first?.url {
+            VKSdk.processOpen(url, fromApplication: UIApplication.OpenURLOptionsKey.sourceApplication.rawValue)
         }
     }
 
@@ -49,7 +64,24 @@ class SceneDelegate: UIResponder, UIWindowSceneDelegate {
         // Use this method to save data, release shared resources, and store enough scene-specific state information
         // to restore the scene back to its current state.
     }
-
+    
+    // -MARK: AuthServiceDelegate
+    
+    func authServiceShouldShow(_ viewController: UIViewController) {
+        print(#function)
+        window?.rootViewController?.present(viewController, animated: true, completion: nil)
+    }
+    
+    func authServiceSignIn() {
+        print(#function)
+        let feedVC: FeedViewController = FeedViewController.loadFromStoryboard()
+        let navVC = UINavigationController(rootViewController: feedVC)
+        window?.rootViewController = navVC
+    }
+    
+    func authServiceDidSignInFail() {
+        print(#function)
+    }
 
 }
 
