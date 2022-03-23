@@ -7,27 +7,36 @@
 
 import Foundation
 
-final class NetworkManager {
-    
+protocol Networking {
+    func request(path: String, params: [String: String], complition: @escaping (Data?, Error?) -> ())
+}
+
+final class NetworkManager: Networking {
+  
     private let authService: AuthService
     
     init(authService: AuthService = SceneDelegate.shared().authService) {
         self.authService = authService
     }
     
-    func getFeed() {
-      
-        // https://api.vk.com/method/users.get?user_ids=210700286&fields=bdate&access_token=533bacf01e11f55b536a565b57531ac114461ae8736d6506a3&v=5.131
-        
+    func request(path: String, params: [String : String], complition: @escaping (Data?, Error?) -> ()) {
         guard let token = authService.token else { return }
-        let params = ["filters": "post, photo"]
         var allParams = params
         allParams["access_token"] = token
         allParams["v"] = API.version
-        let url = self.url(from: API.newsfeed, params: allParams)
-        
+        let url = self.url(from: path, params: allParams)
+        let session = URLSession.init(configuration: .default)
+        let request = URLRequest(url: url)
+        let task = session.dataTask(with: request) { data, response, error in
+            DispatchQueue.main.async {
+                complition(data,error)
+            }
+        }
+        task.resume()
         print(url)
     }
+    
+    
     
     private func url(from path: String, params: [String:String]) -> URL {
         var components = URLComponents()
