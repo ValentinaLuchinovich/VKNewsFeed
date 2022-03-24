@@ -26,6 +26,12 @@ class NewsfeedInteractor: NewsfeedBusinessLogic {
         switch request {
         case .getNewsFeed:
             fetcher.getFeed { feedResponse in
+                feedResponse?.groups.map({ groups in
+                    print("\(groups) \n\n")
+                })
+                feedResponse?.items.map({ feedItem in
+                    print(feedItem.sourceId)
+                })
                 guard let feedResponse = feedResponse else { return }
                 self.presenter?.presentData(response: Newsfeed.Model.Response.ResponseType.presentNewsFeed(feed: feedResponse))
             }

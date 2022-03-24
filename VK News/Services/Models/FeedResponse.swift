@@ -13,20 +13,22 @@ struct FeedRespounseWrapped: Decodable {
 
 struct FeedResponse: Decodable {
     var items: [FeedItem]
+    var profiles: [Profile]
+    var groups: [Group]
 }
 
 struct FeedItem: Decodable {
     // only feed
-    var postId: Int?
-    let sourceId: Int?
+    var postId: Int
+    let sourceId: Int
     
     // only search
     let id: Int?
     let ownerId: Int?
     
     // all
-    var postUid: Int { return postId ?? id! }
-    var sourceUid: Int { return sourceId ?? ownerId! }
+//    var postUid: Int { return postId ?? id! }
+//    var sourceUId: Int { return sourceId ?? ownerId! }
     let text: String?
     let date: Double
     let comments: CountableItem?
@@ -37,4 +39,29 @@ struct FeedItem: Decodable {
 
 struct CountableItem: Decodable {
     let count: Int
+}
+
+protocol ProfileRepresentable {
+    var id: Int { get }
+    var name: String { get }
+    var photo: String { get }
+}
+
+struct Profile: Decodable, ProfileRepresentable {
+    let id: Int
+    let firstName: String
+    let lastName: String
+    let photo100: String
+    
+    var name: String { return firstName + " " + lastName}
+    var photo: String { return photo100 }
+    
+}
+
+struct Group: Decodable, ProfileRepresentable {
+    let id: Int
+    let name: String
+    let photo100: String
+    
+    var photo: String { return photo100 }
 }
