@@ -30,6 +30,7 @@ class NewsFeedCell: UITableViewCell {
     
     static let reuseID = "NewsFeedCell"
     
+    @IBOutlet weak var cardView: UIView!
     @IBOutlet weak var iconImageView: WebImageView!
     @IBOutlet weak var nameLabel: UILabel!
     @IBOutlet weak var dateLabel: UILabel!
@@ -46,6 +47,13 @@ class NewsFeedCell: UITableViewCell {
         // Делаем иконку круглой
         iconImageView.layer.cornerRadius = iconImageView.frame.width / 2
         iconImageView.clipsToBounds = true
+        
+        // Закругляем края ячейки, куда помещены новости
+        cardView.layer.cornerRadius = 10
+        cardView.clipsToBounds = true
+        
+        backgroundColor = .clear
+        selectionStyle = .none
     }
     
     func set(viewModel: FeedCellViewModel) {
