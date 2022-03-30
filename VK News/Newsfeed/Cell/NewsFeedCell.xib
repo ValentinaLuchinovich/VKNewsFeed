@@ -70,7 +70,7 @@
                                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                 <imageReference key="image" image="bubble.right" catalog="system" renderingMode="hierarchical-single">
                                                     <hierarchicalColors>
-                                                        <color systemColor="systemGray2Color"/>
+                                                        <color red="0.68235294117647061" green="0.68235294117647061" blue="0.69803921568627447" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
                                                         <color systemColor="secondaryLabelColor"/>
                                                         <color systemColor="tertiaryLabelColor"/>
                                                     </hierarchicalColors>
