@@ -12,8 +12,8 @@ protocol NewsfeedDisplayLogic: AnyObject {
     func displayData(viewModel: Newsfeed.Model.ViewModel.ViewModelData)
 }
 
-class NewsfeedViewController: UIViewController, NewsfeedDisplayLogic {
-    
+class NewsfeedViewController: UIViewController, NewsfeedDisplayLogic, NewsFeedCodeCellDelegate {
+ 
     var interactor: NewsfeedBusinessLogic?
     var router: (NSObjectProtocol & NewsfeedRoutingLogic)?
     
@@ -55,7 +55,6 @@ class NewsfeedViewController: UIViewController, NewsfeedDisplayLogic {
         table.backgroundColor = .clear
         view.backgroundColor = #colorLiteral(red: 0.2588235438, green: 0.7568627596, blue: 0.9686274529, alpha: 1)
         
-        
         interactor?.makeRequest(request: Newsfeed.Model.Request.RequestType.getNewsFeed)
     }
     
@@ -66,6 +65,13 @@ class NewsfeedViewController: UIViewController, NewsfeedDisplayLogic {
             table.reloadData()
         }
     }
+    
+    // MARK: NewsFeedCodeCellDelegate
+    
+    func revealPost(for cell: NewsFeedCodeCell) {
+        print("123")
+    }
+    
     
 }
 
@@ -80,6 +86,7 @@ extension NewsfeedViewController: UITableViewDelegate, UITableViewDataSource {
         let cell = tableView.dequeueReusableCell(withIdentifier: NewsFeedCodeCell.reuseId, for: indexPath) as! NewsFeedCodeCell
         let cellViewModel = feedViewModel.cells[indexPath.row]
         cell.set(viewModel: cellViewModel)
+        cell.delegate = self
         return cell
     }
     
