@@ -17,7 +17,7 @@ protocol FeedCellViewModel {
     var comment: String? { get }
     var shares: String? { get }
     var views: String? { get }
-    var photoAttachment: FeedCellphotoAttachmentViewModel? { get }
+    var photoAttachments: [FeedCellphotoAttachmentViewModel] { get }
     var sizes: FeedCellSizes { get }
 }
 
@@ -72,25 +72,25 @@ class NewsFeedCell: UITableViewCell {
         selectionStyle = .none
     }
     
-    func set(viewModel: FeedCellViewModel) {
-        iconImageView.set(imageURL: viewModel.iconUrlString)
-        nameLabel.text = viewModel.name
-        dateLabel.text = viewModel.date
-        postLabel.text = viewModel.text
-        likesLabel.text = viewModel.likes
-        commentsLabel.text = viewModel.comment
-        sharesLabel.text = viewModel.shares
-        viewsLabel.text = viewModel.views
-        
-        postLabel.frame = viewModel.sizes.postLabelFrame
-        postImageView.frame = viewModel.sizes.attachmentFrame
-        buttomView.frame = viewModel.sizes.buttomViewFrame 
-        
-        if let photoAttachment = viewModel.photoAttachment {
-            postImageView.set(imageURL: photoAttachment.photoUrlString)
-            postImageView.isHidden = false
-        } else {
-            postImageView.isHidden = true
-        }
-    }
+//    func set(viewModel: FeedCellViewModel) {
+//        iconImageView.set(imageURL: viewModel.iconUrlString)
+//        nameLabel.text = viewModel.name
+//        dateLabel.text = viewModel.date
+//        postLabel.text = viewModel.text
+//        likesLabel.text = viewModel.likes
+//        commentsLabel.text = viewModel.comment
+//        sharesLabel.text = viewModel.shares
+//        viewsLabel.text = viewModel.views
+//        
+//        postLabel.frame = viewModel.sizes.postLabelFrame
+//        postImageView.frame = viewModel.sizes.attachmentFrame
+//        buttomView.frame = viewModel.sizes.buttomViewFrame 
+//        
+//        if let photoAttachment = viewModel.photoAttachments {
+//            postImageView.set(imageURL: photoAttachment.photoUrlString)
+//            postImageView.isHidden = false
+//        } else {
+//            postImageView.isHidden = true
+//        }
+//    }
 }

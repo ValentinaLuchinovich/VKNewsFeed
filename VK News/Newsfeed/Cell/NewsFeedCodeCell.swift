@@ -38,6 +38,7 @@ final class NewsFeedCodeCell: UITableViewCell {
         label.numberOfLines = 0
         label.font = Constants.postLabelFont
         label.textColor = #colorLiteral(red: 0.2276484668, green: 0.2322214842, blue: 0.236567229, alpha: 1)
+        
         return label
     }()
     
@@ -47,10 +48,11 @@ final class NewsFeedCodeCell: UITableViewCell {
         button.setTitleColor(.systemBlue, for: .normal)
         button.contentHorizontalAlignment = .left
         button.contentVerticalAlignment = .center
-        button.backgroundColor = .blue
         button.setTitle("Показать полностью...", for: .normal)
         return button
     }()
+    
+    let galleryCollectionView = GaleryCollectionView ()
     
     let postImageView: WebImageView = {
         let imageView = WebImageView()
@@ -61,6 +63,7 @@ final class NewsFeedCodeCell: UITableViewCell {
         let view = UIView()
         return view
     }()
+    
     
     // Третий слой на topView
     
@@ -74,7 +77,7 @@ final class NewsFeedCodeCell: UITableViewCell {
         let label = UILabel()
         label.translatesAutoresizingMaskIntoConstraints = false
         label.font = UIFont.systemFont(ofSize: 14, weight: .medium)
-        label.numberOfLines = 0
+        //        label.numberOfLines = 0
         label.textColor = #colorLiteral(red: 0.2276484668, green: 0.2322214842, blue: 0.236567229, alpha: 1)
         return label
     }()
@@ -86,6 +89,7 @@ final class NewsFeedCodeCell: UITableViewCell {
         label.textColor = #colorLiteral(red: 0.5058823529, green: 0.5490196078, blue: 0.6, alpha: 1)
         return label
     }()
+    
     
     // Третий слой на bottomView
     
@@ -192,6 +196,7 @@ final class NewsFeedCodeCell: UITableViewCell {
         postImageView.set(imageURL: nil)
     }
     
+    
     override init(style: UITableViewCell.CellStyle, reuseIdentifier reuseIdentifire: String?) {
         super.init(style: style, reuseIdentifier: reuseIdentifire)
         
@@ -206,15 +211,13 @@ final class NewsFeedCodeCell: UITableViewCell {
         cardView.clipsToBounds = true
         
         moreTextButton.addTarget(self, action: #selector(moreTextButtonTouch), for: .touchUpInside)
-//        moreTextButton.isUserInteractionEnabled = true
-//        moreTextButton.isEnabled = true
         
         overlayFirstLayer() // первый слой
         overlaySacondLayer() // второй слой
         overlayThirdLayerOnTopView() // третий слой на topView
         overlayThirdLayerOnBottomView() // третий слой на bottomView
         overlayFourthLayerOnBottomViewViews() // четвертый слой на bottomView
-
+        
     }
     
     @objc func moreTextButtonTouch() {
@@ -233,15 +236,22 @@ final class NewsFeedCodeCell: UITableViewCell {
         viewsLabel.text = viewModel.views
         
         postLabel.frame = viewModel.sizes.postLabelFrame
-        postImageView.frame = viewModel.sizes.attachmentFrame
         bottomView.frame = viewModel.sizes.buttomViewFrame
         moreTextButton.frame = viewModel.sizes.moreTextButtonFrame
-        
-        if let photoAttachment = viewModel.photoAttachment {
+
+        if let photoAttachment = viewModel.photoAttachments.first, viewModel.photoAttachments.count == 1 {
             postImageView.set(imageURL: photoAttachment.photoUrlString)
             postImageView.isHidden = false
+            galleryCollectionView.isHidden = true
+            postImageView.frame = viewModel.sizes.attachmentFrame
+        } else if viewModel.photoAttachments.count > 1 {
+            galleryCollectionView.frame = viewModel.sizes.attachmentFrame
+            postImageView.isHidden = true
+            galleryCollectionView.isHidden = false
+            galleryCollectionView.set(photos: viewModel.photoAttachments)
         } else {
             postImageView.isHidden = true
+            galleryCollectionView.isHidden = true
         }
     }
     
@@ -285,33 +295,31 @@ final class NewsFeedCodeCell: UITableViewCell {
         bottomView.addSubview(viewsView)
         
         // likesView constarints
-        likesView.anchor(top: bottomView.topAnchor,
-                         leading: bottomView.leadingAnchor,
-                         bottom: nil,
-                         trailing: nil,
-                         size: CGSize(width: Constants.bottoViewViewWidth, height: Constants.bottoViewViewHeight))
+        likesView.leadingAnchor.constraint(equalTo: bottomView.leadingAnchor).isActive = true
+        likesView.topAnchor.constraint(equalTo: bottomView.topAnchor).isActive = true
+        likesView.heightAnchor.constraint(equalToConstant: Constants.bottomViewHeight).isActive = true
+        likesView.widthAnchor.constraint(equalToConstant: Constants.bottoViewViewWidth).isActive = true
         
         // commentsView constarints
-        commentsView.anchor(top: bottomView.topAnchor,
-                            leading: likesView.trailingAnchor,
-                            bottom: nil,
-                            trailing: nil,
-                            size: CGSize(width: Constants.bottoViewViewWidth, height: Constants.bottoViewViewHeight))
+        commentsView.leadingAnchor.constraint(equalTo: likesView.trailingAnchor).isActive = true
+        commentsView.topAnchor.constraint(equalTo: bottomView.topAnchor).isActive = true
+        commentsView.heightAnchor.constraint(equalToConstant: Constants.bottomViewHeight).isActive = true
+        commentsView.widthAnchor.constraint(equalToConstant: Constants.bottoViewViewWidth).isActive = true
         
         // sharesView constarints
-        sharesView.anchor(top: bottomView.topAnchor,
-                          leading: commentsView.trailingAnchor,
-                          bottom: nil,
-                          trailing: nil,
-                          size: CGSize(width: Constants.bottoViewViewWidth, height: Constants.bottoViewViewHeight))
+        sharesView.leadingAnchor.constraint(equalTo: commentsView.trailingAnchor).isActive = true
+        sharesView.topAnchor.constraint(equalTo: bottomView.topAnchor).isActive = true
+        sharesView.heightAnchor.constraint(equalToConstant: Constants.bottomViewHeight).isActive = true
+        sharesView.widthAnchor.constraint(equalToConstant: Constants.bottoViewViewWidth).isActive = true
         
         // viewsView constarints
-        viewsView.anchor(top: bottomView.topAnchor,
-                         leading: nil,
-                         bottom: nil,
-                         trailing: bottomView.trailingAnchor,
-                         size: CGSize(width: Constants.bottoViewViewWidth, height: Constants.bottoViewViewHeight))
+        viewsView.trailingAnchor.constraint(equalTo: bottomView.trailingAnchor).isActive = true
+        viewsView.topAnchor.constraint(equalTo: bottomView.topAnchor).isActive = true
+        viewsView.heightAnchor.constraint(equalToConstant: Constants.bottomViewHeight).isActive = true
+        viewsView.widthAnchor.constraint(equalToConstant: Constants.bottoViewViewWidth ).isActive = true
+        
     }
+    
     
     private func overlayThirdLayerOnTopView() {
         topView.addSubview(iconImageView)
@@ -327,41 +335,47 @@ final class NewsFeedCodeCell: UITableViewCell {
         // nameLabel constarints
         nameLabel.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 8).isActive = true
         nameLabel.trailingAnchor.constraint(equalTo: topView.trailingAnchor, constant: -8).isActive = true
-        nameLabel.topAnchor.constraint(equalTo: topView.topAnchor, constant: 2).isActive = true
-        nameLabel.heightAnchor.constraint(equalToConstant: Constants.topViewHight / 2 - 2).isActive = true
+        nameLabel.topAnchor.constraint(equalTo: topView.topAnchor, constant: 4).isActive = true
+        nameLabel.heightAnchor.constraint(equalToConstant: Constants.topViewHight / 2 - 4).isActive = true
         
         // dateLabel constarints
         dateLabel.leadingAnchor.constraint(equalTo: iconImageView.trailingAnchor, constant: 8).isActive = true
         dateLabel.trailingAnchor.constraint(equalTo: topView.trailingAnchor, constant: -8).isActive = true
-        dateLabel.bottomAnchor.constraint(equalTo: topView.bottomAnchor, constant: -2).isActive = true
-        dateLabel.heightAnchor.constraint(equalToConstant: 14).isActive = true
+        dateLabel.bottomAnchor.constraint(equalTo: topView.bottomAnchor, constant: -4).isActive = true
+        dateLabel.heightAnchor.constraint(equalToConstant: Constants.topViewHight / 2 - 6).isActive = true
     }
+    
     
     private func overlaySacondLayer() {
         cardView.addSubview(topView)
         cardView.addSubview(postLabel)
         cardView.addSubview(moreTextButton)
         cardView.addSubview(postImageView)
+        cardView.addSubview(galleryCollectionView)
         cardView.addSubview(bottomView)
         
         // topView constraints
         topView.leadingAnchor.constraint(equalTo: cardView.leadingAnchor, constant: 8).isActive = true
         topView.trailingAnchor.constraint(equalTo: cardView.trailingAnchor, constant: -8).isActive = true
-        topView.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 8).isActive = true
+        topView.topAnchor.constraint(equalTo: cardView.topAnchor, constant: 12).isActive = true
         topView.heightAnchor.constraint(equalToConstant: Constants.topViewHight).isActive = true
         
-        // postLabel constraints
+        // postLabel constrains
+        // не нужно, так как размеры задаются динамически
         
-        // postImageView constraints
+        //showTextButton constrains
+        // не нужно, так как размеры задаются динамически
         
-        // moreTextButton constraints
+        //postImageView constrains
+        // не нужно, так как размеры задаются динамически
         
-        // bottomView constraints
+        //bottomView constrains
+        // не нужно, так как размеры задаются динамически
         
     }
     
     private func overlayFirstLayer() {
-        addSubview(cardView)
+        contentView.addSubview(cardView)
         
         //cardView constrains
         cardView.fillSuperview(padding: Constants.cardInserts)
@@ -371,3 +385,4 @@ final class NewsFeedCodeCell: UITableViewCell {
         fatalError("init(coder:) has not been implemented")
     }
 }
+

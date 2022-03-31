@@ -9,7 +9,7 @@ import Foundation
 import UIKit
 
 protocol FeedCellLayoutColculaterProtocol {
-    func sizes(postText: String?, photoAttachment: FeedCellphotoAttachmentViewModel?) -> FeedCellSizes
+    func sizes(postText: String?, photoAttachments: [FeedCellphotoAttachmentViewModel], isFullSizedPost: Bool) -> FeedCellSizes
 }
 
 struct Sizes: FeedCellSizes {
@@ -28,7 +28,7 @@ final class FeedCellLayoutCalculator: FeedCellLayoutColculaterProtocol {
         self.screenWidth = screenWidth
     }
   
-    func sizes(postText: String?, photoAttachment: FeedCellphotoAttachmentViewModel?) -> FeedCellSizes {
+    func sizes(postText: String?, photoAttachments: [FeedCellphotoAttachmentViewModel], isFullSizedPost: Bool) -> FeedCellSizes {
         
         var showMoreTextButton = false
         
@@ -45,7 +45,7 @@ final class FeedCellLayoutCalculator: FeedCellLayoutColculaterProtocol {
             
             let limitHight = Constants.postLabelFont.lineHeight * Constants.minifiedPostLimitLined
             
-            if height > limitHight {
+            if !isFullSizedPost && height > limitHight {
                 height = Constants.postLabelFont.lineHeight * Constants.minifiedPostLines
                 showMoreTextButton = true
             }
@@ -61,7 +61,7 @@ final class FeedCellLayoutCalculator: FeedCellLayoutColculaterProtocol {
             moreTextButtonSize = Constants.moreTextButtonSize
         }
         
-        let moreTextButtonOrigin = CGPoint(x: Constants.moreTextButtonInserts.left, y: postLabelFrame.maxY)
+        let moreTextButtonOrigin = CGPoint(x: Constants.moreTextButtonInserts.left, y: postLabelFrame.maxY + Constants.postLabelInserts.bottom)
         
         let moreTextButtonFrame = CGRect(origin: moreTextButtonOrigin, size: moreTextButtonSize)
         
@@ -69,11 +69,16 @@ final class FeedCellLayoutCalculator: FeedCellLayoutColculaterProtocol {
         let attachmentTop = postLabelFrame.size == CGSize.zero ? Constants.postLabelInserts.top : moreTextButtonFrame.maxY + Constants.postLabelInserts.bottom
         var attachmentFrame = CGRect(origin: CGPoint(x: 0, y: attachmentTop), size: CGSize.zero)
         
-        if let attachment = photoAttachment {
+        if let attachment = photoAttachments.first {
             let photoHeight: Float = Float(attachment.height)
             let photoWight: Float = Float(attachment.wight)
             let ratio = CGFloat(photoHeight / photoWight)
-            attachmentFrame.size = CGSize(width: cardViewWidth, height: cardViewWidth * ratio)
+            if photoAttachments.count == 1 {
+                attachmentFrame.size = CGSize(width: cardViewWidth, height: cardViewWidth * ratio)
+            } else if photoAttachments.count > 1 {
+                print("Больше одного фото")
+                attachmentFrame.size = CGSize(width: cardViewWidth, height: cardViewWidth * ratio)
+            }
         }
         
         // MARK: -Работа с bottomViewFrame

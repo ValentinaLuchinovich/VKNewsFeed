@@ -70,9 +70,11 @@ class NewsfeedViewController: UIViewController, NewsfeedDisplayLogic, NewsFeedCo
     
     func revealPost(for cell: NewsFeedCodeCell) {
         print("123")
+        guard let indexPath = table.indexPath(for: cell) else { return }
+        let cellViewModel = feedViewModel.cells[indexPath.row]
+        
+        interactor?.makeRequest(request: Newsfeed.Model.Request.RequestType.revealPostIds(postId: cellViewModel.postId))
     }
-    
-    
 }
 
 extension NewsfeedViewController: UITableViewDelegate, UITableViewDataSource {
