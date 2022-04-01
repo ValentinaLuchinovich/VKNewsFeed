@@ -27,7 +27,6 @@ class InsertabletextField: UITextField {
         leftView = UIImageView(image: image)
         leftView?.tintColor = #colorLiteral(red: 0.6823529412, green: 0.6823529412, blue: 0.6980392157, alpha: 1)
         leftView?.contentMode = .scaleAspectFill
-//        leftView.translatesAutoresizingMaskIntoConstraints = false
         leftView?.frame = CGRect(x: 0, y: 0, width: 14, height: 14)
         leftViewMode = .always
     }
