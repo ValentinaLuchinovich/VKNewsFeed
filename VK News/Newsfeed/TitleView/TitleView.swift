@@ -30,6 +30,7 @@ class TitleView: UIView {
         translatesAutoresizingMaskIntoConstraints = false
         addSubview(myTextField)
         addSubview(myAvatarView)
+        backgroundColor = .white
         
         makeConstraints()
     }
