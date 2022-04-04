@@ -18,4 +18,4 @@
 <br> 11. UINavigationController </br>
 12. CAGradientLayer & Custom Shadows
  
-<img src="https://github.com/ValentinaLuchinovich/AnimalShelter-SwiftUI/blob/Screenshots/IMG_6750.PNG" width="400"/> <img src="https://github.com/ValentinaLuchinovich/AnimalShelter-SwiftUI/blob/Screenshots/IMG_6751.PNG" width="400"/>
+<img src="https://github.com/ValentinaLuchinovich/VKNewsFeed/blob/ValentinaLuchinovich-Screenshots/IMG_6818.PNG" width="400"/> <img src="https://github.com/ValentinaLuchinovich/VKNewsFeed/blob/ValentinaLuchinovich-Screenshots/IMG_6819.PNG" width="400"/>
