@@ -8,7 +8,7 @@
 import Foundation
 
 protocol DataFetcher {
-    func getFeed(response: @escaping (FeedResponse?) -> ())
+    func getFeed(nextBatchFrom: String?, response: @escaping (FeedResponse?) -> ())
     func getUser(response: @escaping (UserRespounse?) -> Void)
 //    func searchFeed(by query: String, nextBatchFrom: String?, response: @escaping (FeedResponse?) -> Void)
 }
@@ -36,8 +36,9 @@ struct NetworkDataFetcher: DataFetcher {
         }
     }
     
-    func getFeed(response: @escaping (FeedResponse?) -> ()) {
-        let params = ["filters": "post, photo"]
+    func getFeed(nextBatchFrom: String?, response: @escaping (FeedResponse?) -> ()) {
+        var params = ["filters": "post, photo"]
+        params["start_from"] = nextBatchFrom
         networking.request(path: API.newsFeed, with: params) { data, error in
             if let error = error {
                 print("Error received requesting data: \(error.localizedDescription) ")
